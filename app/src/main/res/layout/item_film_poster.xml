@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <!-- Movie Poster Image -->
+    <ImageView
+        android:id="@+id/film_poster_image"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        tools:background="@android:color/darker_gray"
+        android:contentDescription="@string/film_poster_image_description" />
+
+    <!-- Container for Rating (Star + Text) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp">
+
+        <ImageView
+            android:id="@+id/star_icon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:srcCompat="@drawable/ic_star_rate"
+            app:tint="@color/imdb_yellow"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/film_rating_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="12sp"
+            tools:text="9.3" />
+
+    </LinearLayout>
+
+    <!-- Movie Title -->
+    <TextView
+        android:id="@+id/film_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="The Shawshank Redemption" />
+
+    <!-- Film Year and Certificate -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/film_year_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            tools:text="1994" />
+
+        <TextView
+            android:id="@+id/film_certificate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_certificate_border"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="R"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+</LinearLayout>

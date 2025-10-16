@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true"
+    tools:context="usth.ict.group20.imdb.ui.fragment.HomeFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp">
+
+        <!-- Carousel -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/featured_carousel_viewpager"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Search Bar -->
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/home_search_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/searchview_background"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:iconifiedByDefault="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/featured_carousel_viewpager"
+            app:queryHint="Search IMDb" />
+
+        <!-- Feature Today -->
+        <TextView
+            android:id="@+id/featured_today_header"
+            style="@style/SectionHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Featured Today"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/home_search_view" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/featured_today_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/featured_today_header"
+            tools:listitem="@layout/item_news_article" />
+
+        <!-- Popular People -->
+        <TextView
+            android:id="@+id/popular_people_header"
+            style="@style/SectionHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Popular People"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/featured_today_recyclerview" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/popular_people_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/popular_people_header"
+            tools:listitem="@layout/item_person_portrait" />
+
+        <!-- What to watch  -->
+        <TextView
+            android:id="@+id/what_to_watch_header"
+            style="@style/SectionHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="What to Watch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/popular_people_recyclerview" />
+
+        <!-- Top 10 this Week -->
+        <LinearLayout
+            android:id="@+id/top_10_imdb_header_container"
+            style="@style/SubSectionHeaderContainerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/what_to_watch_header">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@drawable/stripe_yellow" />
+
+            <TextView
+                android:id="@+id/top_10_imdb_header"
+                style="@style/SubSectionHeaderTextStyle"
+                android:layout_marginStart="8dp"
+                android:text="Top 10 This Week" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/top_10_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_10_imdb_header_container"
+            tools:listitem="@layout/item_film_poster" />
+
+        <!-- Top pick for you -->
+        <LinearLayout
+            android:id="@+id/top_picks_header_container"
+            style="@style/SubSectionHeaderContainerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_10_recyclerview">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@drawable/stripe_yellow" />
+
+            <TextView
+                android:id="@+id/top_picks_header"
+                style="@style/SubSectionHeaderTextStyle"
+                android:layout_marginStart="8dp"
+                android:text="Top picks for you" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/top_picks_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_picks_header_container"
+            tools:listitem="@layout/item_film_poster" />
+
+        <!-- In theaters -->
+        <LinearLayout
+            android:id="@+id/in_theaters_header_container"
+            style="@style/SubSectionHeaderContainerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_picks_recyclerview">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@drawable/stripe_yellow" />
+
+            <TextView
+                android:id="@+id/in_theaters_header"
+                style="@style/SubSectionHeaderTextStyle"
+                android:layout_marginStart="8dp"
+                android:text="In theaters" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/in_theaters_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/in_theaters_header_container"
+            tools:listitem="@layout/item_film_poster" />
+
+        <!-- Top Rated Movies -->
+        <LinearLayout
+            android:id="@+id/top_rated_header_container"
+            style="@style/SubSectionHeaderContainerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/in_theaters_recyclerview">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@drawable/stripe_yellow" />
+
+            <TextView
+                android:id="@+id/top_rated_header"
+                style="@style/SubSectionHeaderTextStyle"
+                android:layout_marginStart="8dp"
+                android:text="Top Rated" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/top_rated_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_rated_header_container"
+            tools:listitem="@layout/item_film_poster" />
+
+
+        <!-- Explore Movies & TV shows (Corrected Position) -->
+        <TextView
+            android:id="@+id/explore_movies_header"
+            style="@style/SectionHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Explore Movies &amp; TV shows"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_rated_recyclerview" />
+
+        <!-- Streaming Now -->
+        <LinearLayout
+            android:id="@+id/streaming_now_header_container"
+            style="@style/SubSectionHeaderContainerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/explore_movies_header">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@drawable/stripe_yellow" />
+
+            <TextView
+                android:id="@+id/streaming_now_header"
+                style="@style/SubSectionHeaderTextStyle"
+                android:layout_marginStart="8dp"
+                android:text="Streaming Now" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/streaming_now_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/streaming_now_header_container"
+            tools:listitem="@layout/item_film_poster" />
+
+        <!-- Top Box Office -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_box_office_header_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/streaming_now_recyclerview">
+
+            <View
+                android:id="@+id/stripe_view"
+                android:layout_width="4dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:background="#FFC107"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/stripe_view"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    style="@style/SubSectionHeaderTextStyle"
+                    android:text="Top box office (US)" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekend of 10 - 12 October"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/see_all_box_office"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="See All"
+                android:textColor="#2D72D9"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/top_box_office_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_box_office_header_container"
+            tools:listitem="@layout/item_box_office_movie"
+            tools:itemCount="6"/>
+
+        <!-- Coming Soon -->
+        <LinearLayout
+            android:id="@+id/coming_soon_header_container"
+            style="@style/SubSectionHeaderContainerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_box_office_recyclerview">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@drawable/stripe_yellow" />
+
+            <TextView
+                android:id="@+id/coming_soon_header"
+                style="@style/SubSectionHeaderTextStyle"
+                android:layout_marginStart="8dp"
+                android:text="Coming Soon" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/coming_soon_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coming_soon_header_container"
+            tools:listitem="@layout/item_film_poster" />
+
+        <!-- More to Explore -->
+        <!-- === MORE TO EXPLORE SECTION === -->
+
+        <!-- Main Section Header -->
+        <TextView
+            android:id="@+id/more_to_explore_header"
+            style="@style/SectionHeaderTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="More to Explore"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coming_soon_recyclerview" />
+
+        <!-- "follow IMDb on" Sub-Header with Stripe -->
+        <LinearLayout
+            android:id="@+id/follow_imdb_header_container"
+            style="@style/SubSectionHeaderContainerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/more_to_explore_header">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:background="@drawable/stripe_yellow" />
+
+            <TextView
+                android:id="@+id/follow_imdb_header"
+                style="@style/SubSectionHeaderTextStyle"
+                android:layout_marginStart="8dp"
+                android:text="follow IMDb on" />
+        </LinearLayout>
+
+        <!-- Social Media Buttons -->
+        <LinearLayout
+            android:id="@+id/social_buttons_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/follow_imdb_header_container">
+
+            <!-- Add your ImageButton or Button views for social media here -->
+            <ImageButton
+                android:id="@+id/btn_social_tiktok"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="IMDb on TikTok"
+                android:src="@drawable/ic_tiktok_placeholder" />
+
+            <ImageButton
+                android:id="@+id/btn_social_instagram"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="IMDb on Instagram"
+                android:src="@drawable/ic_instagram_placeholder" />
+
+            <ImageButton
+                android:id="@+id/btn_social_twitter"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="IMDb on Twitter"
+                android:src="@drawable/ic_x_placeholder" />
+
+            <ImageButton
+                android:id="@+id/btn_social_youtube"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="IMDb on YouTube"
+                android:src="@drawable/ic_youtube_placeholder" />
+
+            <ImageButton
+                android:id="@+id/btn_social_facebook"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="IMDb on Facebook"
+                android:src="@drawable/ic_facebook_placeholder" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
