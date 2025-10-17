@@ -16,8 +16,8 @@
         tools:background="@android:color/darker_gray"
         android:contentDescription="@string/film_poster_image_description" />
 
-    <!-- Container for Rating (Star + Text) -->
     <LinearLayout
+        android:id="@+id/rating_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

@@ -6,6 +6,8 @@ data class TvShow(
     val name: String,
     val overview: String?,
     val poster_path: String?,
+    @SerializedName("backdrop_path")
+    val backdrop_path: String?,
     val first_air_date: String?,
     @SerializedName("vote_average")
     val voteAverage: Double?

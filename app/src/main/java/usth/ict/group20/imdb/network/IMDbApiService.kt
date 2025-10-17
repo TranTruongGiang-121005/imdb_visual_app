@@ -8,7 +8,6 @@ import usth.ict.group20.imdb.models.*
 
 interface IMDbApiService {
 
-
     @GET("movie/top_rated")
     fun getTopRatedMovies(
         @Query("api_key") apiKey: String,
@@ -38,14 +37,6 @@ interface IMDbApiService {
         @Query("page") page: Int = 1
     ): Call<MovieResponse>
 
-    // 🎞️ Individual Movie Detail
-    @GET("movie/{movie_id}")
-    fun getMovieDetails(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String
-    ): Call<MovieDetail>
-
-
     @GET("tv/on_the_air")
     fun getOnAirTvShows(
         @Query("api_key") apiKey: String,
@@ -74,13 +65,14 @@ interface IMDbApiService {
     fun getMovieDetails(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
-        @Query("append_to_response") appendToResponse: String = "images" // Fetch images
+        @Query("append_to_response") appendToResponse: String = "images"
     ): Call<MovieDetail>
 
     @GET("tv/{tv_id}")
     fun getTvShowDetails(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
-        @Query("append_to_response") appendToResponse: String = "images,content_ratings" // Fetch images
+        @Query("append_to_response") appendToResponse: String = "images,content_ratings"
     ): Call<TvShowDetail>
 }
+

@@ -4,5 +4,6 @@ data class CarouselItems(
     val name: String,
     val imageUrl: String?,
     val filmId: Int,
-    val mediaType: String
+    val mediaType: String,
+    val voteAverage: Double?
 )

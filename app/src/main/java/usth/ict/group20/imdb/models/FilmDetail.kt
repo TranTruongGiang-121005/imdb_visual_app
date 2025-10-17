@@ -12,7 +12,7 @@ data class MovieDetail(
     val genres: List<Genre>,
     val runtime: Int?,
     @SerializedName("vote_average") val voteAverage: Double,
-    val images: ImagesResponse? // For backdrop images
+    val images: ImagesResponse?
 )
 
 data class TvShowDetail(
@@ -25,10 +25,9 @@ data class TvShowDetail(
     @SerializedName("episode_run_time") val episodeRunTime: List<Int>?,
     @SerializedName("vote_average") val voteAverage: Double,
     @SerializedName("content_ratings") val contentRatings: ContentRatingsResponse,
-    val images: ImagesResponse? // For backdrop images
+    val images: ImagesResponse?
 )
 
-// --- Helper Data Classes ---
 data class Genre(val name: String)
 data class ImagesResponse(val backdrops: List<Image>)
 data class Image(@SerializedName("file_path") val filePath: String)

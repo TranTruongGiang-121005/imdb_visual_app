@@ -13,12 +13,14 @@ import usth.ict.group20.imdb.models.CarouselItems
 
 class TopRatedAdapter(
     private val items: List<CarouselItems>,
-    private val listener: OnFilmClickListener // ✅ Add listener
+    private val listener: OnFilmClickListener
 ) : RecyclerView.Adapter<TopRatedAdapter.TopRatedViewHolder>() {
 
     class TopRatedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val poster: ImageView = itemView.findViewById(R.id.film_poster_image)
-        val title: TextView? = itemView.findViewById(R.id.film_title_text)
+        val title: TextView = itemView.findViewById(R.id.film_title_text)
+        val ratingText: TextView = itemView.findViewById(R.id.film_rating_text)
+        val ratingContainer: View = itemView.findViewById(R.id.rating_container)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopRatedViewHolder {
@@ -30,9 +32,15 @@ class TopRatedAdapter(
     override fun onBindViewHolder(holder: TopRatedViewHolder, position: Int) {
         val item = items[position]
         holder.poster.load(item.imageUrl)
-        holder.title?.text = item.name
+        holder.title.text = item.name
 
-        // ✅ Set the click listener
+        if (item.voteAverage != null && item.voteAverage > 0) {
+            holder.ratingText.text = String.format("%.1f", item.voteAverage)
+            holder.ratingContainer.visibility = View.VISIBLE
+        } else {
+            holder.ratingContainer.visibility = View.GONE
+        }
+
         holder.itemView.setOnClickListener {
             listener.onFilmClick(item.filmId, item.mediaType)
         }

@@ -11,7 +11,6 @@ import usth.ict.group20.imdb.R
 import usth.ict.group20.imdb.listeners.OnFilmClickListener
 import usth.ict.group20.imdb.models.Movie
 
-// ✅ 1. Add the listener to the constructor
 class FilmAdapter(
     private val films: List<Movie>,
     private val listener: OnFilmClickListener
@@ -19,7 +18,11 @@ class FilmAdapter(
 
     class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val poster: ImageView = itemView.findViewById(R.id.film_poster_image)
-        val title: TextView? = itemView.findViewById(R.id.film_title_text)
+        val title: TextView = itemView.findViewById(R.id.film_title_text)
+        // ✅ Add references to the new rating views from your layout
+        val rating: TextView = itemView.findViewById(R.id.film_rating_text)
+        val starIcon: ImageView = itemView.findViewById(R.id.star_icon)
+        val ratingContainer: View = itemView.findViewById(R.id.rating_container)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
@@ -30,14 +33,26 @@ class FilmAdapter(
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
         val film = films[position]
-        holder.poster.load("https://image.tmdb.org/t/p/w500${film.poster_path}")
-        holder.title?.text = film.title
 
-        // ✅ 2. Set the click listener on the item
+        holder.poster.load("https://image.tmdb.org/t/p/w500${film.poster_path}") {
+            placeholder(R.drawable.ic_search_placeholder) // Use your placeholder
+            error(R.drawable.ic_search_placeholder)
+        }
+
+        holder.title.text = film.title
+
+        if (film.voteAverage != null && film.voteAverage > 0) {
+            holder.rating.text = String.format("%.1f", film.voteAverage)
+            holder.ratingContainer.visibility = View.VISIBLE
+        } else {
+            holder.ratingContainer.visibility = View.GONE
+        }
+
         holder.itemView.setOnClickListener {
-            listener.onFilmClick(film.id, "movie") // All films here are movies
+            listener.onFilmClick(film.id, "movie")
         }
     }
 
     override fun getItemCount() = films.size
 }
+

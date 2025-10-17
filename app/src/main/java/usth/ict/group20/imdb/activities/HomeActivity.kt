@@ -28,18 +28,11 @@ import usth.ict.group20.imdb.network.RetrofitClient
 import usth.ict.group20.imdb.ui.activity.FilmActivity
 import usth.ict.group20.imdb.ui.activity.SearchResultsActivity
 
-// A helper data class to temporarily hold combined movie/tv data
 private data class MediaItem(
-    val id: Int,
-    val mediaType: String,
-    val title: String?,
-    val posterPath: String?,
-    val releaseDate: String?,
-    val voteAverage: Double?
+    val id: Int, val mediaType: String, val title: String?,
+    val posterPath: String?, val releaseDate: String?, val voteAverage: Double?
 )
 
-// The class is named HomeActivity but functions as a Fragment.
-// It implements the listener to handle clicks from any adapter.
 class HomeActivity : Fragment(), OnFilmClickListener {
 
     private lateinit var viewPager: ViewPager2
@@ -50,30 +43,22 @@ class HomeActivity : Fragment(), OnFilmClickListener {
     private val apiService: IMDbApiService by lazy { RetrofitClient.instance }
     private val apiKey = "f23fa4d133a28ce7eb6220b8901707b7"
 
-    // Updated offline data to include mediaType
     private val featureTodayList = listOf(
-        CarouselItems("Editor's Pick: The Matrix", "file:///android_asset/matrix_poster.jpg", 603, "movie"),
-        CarouselItems("Classic: Inception", "file:///android_asset/inception_poster.jpg", 27205, "movie")
+        CarouselItems("Editor's Pick: The Matrix", "file:///android_asset/matrix_poster.jpg", 603, "movie", 8.7),
+        CarouselItems("Classic: Inception", "file:///android_asset/inception_poster.jpg", 27205, "movie", 8.8)
     )
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.activity_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Setup UI components and load data
         setupFollowButtons(view)
         setupSearch(view)
         loadCarousel(view)
-        setupTopBoxOffice(view)
     }
 
-    /**
-     * This is the single click handler for any film clicked in this fragment.
-     * It's called by the adapters via the OnFilmClickListener interface.
-     */
     override fun onFilmClick(filmId: Int, mediaType: String) {
         val intent = Intent(requireActivity(), FilmActivity::class.java).apply {
             putExtra("FILM_ID", filmId)
@@ -83,31 +68,17 @@ class HomeActivity : Fragment(), OnFilmClickListener {
     }
 
     private fun loadCarousel(view: View) {
-        val movieCall = apiService.getInTheaters(apiKey)
-        val tvCall = apiService.getOnAirTvShows(apiKey)
-
-        movieCall.enqueue(object : Callback<MovieResponse> {
+        val listener: OnFilmClickListener = this
+        apiService.getInTheaters(apiKey).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 val movieList = response.body()?.results ?: emptyList()
-
-                tvCall.enqueue(object : Callback<TvShowResponse> {
+                apiService.getOnAirTvShows(apiKey).enqueue(object : Callback<TvShowResponse> {
                     override fun onResponse(call: Call<TvShowResponse>, response: Response<TvShowResponse>) {
                         val tvList = response.body()?.results ?: emptyList()
-
                         val movieItems = movieList.map { MediaItem(it.id, "movie", it.title, it.poster_path, it.release_date, it.voteAverage) }
                         val tvItems = tvList.map { MediaItem(it.id, "tv", it.name, it.poster_path, it.first_air_date, it.voteAverage) }
-
-                        val combined = (movieItems + tvItems)
-                            .sortedByDescending { it.releaseDate ?: "" }
-                            .take(5)
-                            .map {
-                                CarouselItems(
-                                    name = it.title ?: "Untitled",
-                                    imageUrl = it.posterPath?.let { path -> "https://image.tmdb.org/t/p/w500$path" } ?: "",
-                                    filmId = it.id,
-                                    mediaType = it.mediaType
-                                )
-                            }
+                        val combined = (movieItems + tvItems).sortedByDescending { it.releaseDate ?: "" }.take(5)
+                            .map { CarouselItems(it.title ?: "Untitled", it.posterPath?.let { p -> "https://image.tmdb.org/t/p/w500$p" } ?: "", it.id, it.mediaType, it.voteAverage) }
                         setupFeaturedCarousel(view, combined)
                         setupFeaturedToday(view)
                         loadPopularPeople(view)
@@ -147,78 +118,68 @@ class HomeActivity : Fragment(), OnFilmClickListener {
     private fun loadPopularPeople(view: View) {
         apiService.getPopularCelebrities(apiKey).enqueue(object : Callback<PersonResponse> {
             override fun onResponse(call: Call<PersonResponse>, response: Response<PersonResponse>) {
-                val celebs = response.body()?.results ?: emptyList()
-                setupHorizontalRecyclerView(view, R.id.popular_people_recyclerview, PersonAdapter(celebs))
+                setupHorizontalRecyclerView(view, R.id.popular_people_recyclerview, PersonAdapter(response.body()?.results ?: emptyList()))
                 loadTop10ThisWeek(view)
             }
-            override fun onFailure(call: Call<PersonResponse>, t: Throwable) {
-                showToast("Failed to load Popular People")
-                loadTop10ThisWeek(view)
-            }
+            override fun onFailure(call: Call<PersonResponse>, t: Throwable) { loadTop10ThisWeek(view) }
         })
     }
 
     private fun loadTop10ThisWeek(view: View) {
+        val listener: OnFilmClickListener = this
         apiService.getTrendingMovies(apiKey).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                val trending = response.body()?.results?.take(10) ?: emptyList()
-                setupHorizontalRecyclerView(view, R.id.top_10_recyclerview, FilmAdapter(trending, this@HomeActivity))
+                setupHorizontalRecyclerView(view, R.id.top_10_recyclerview, FilmAdapter(response.body()?.results?.take(10) ?: emptyList(), listener))
                 loadFanFavorites(view)
             }
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { showToast("Failed to load Top 10") }
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { /* Handle error */ }
         })
     }
 
     private fun loadFanFavorites(view: View) {
+        val listener: OnFilmClickListener = this
         apiService.getFanFavorites(apiKey).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                val favs = response.body()?.results?.take(10) ?: emptyList()
-                setupHorizontalRecyclerView(view, R.id.top_picks_recyclerview, FilmAdapter(favs, this@HomeActivity))
+                setupHorizontalRecyclerView(view, R.id.top_picks_recyclerview, FilmAdapter(response.body()?.results?.take(10) ?: emptyList(), listener))
                 loadInTheaters(view)
             }
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { showToast("Failed to load Fan Favorites") }
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { /* Handle error */ }
         })
     }
 
     private fun loadInTheaters(view: View) {
+        val listener: OnFilmClickListener = this
         apiService.getInTheaters(apiKey).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                val inTheaters = response.body()?.results?.take(10) ?: emptyList()
-                setupHorizontalRecyclerView(view, R.id.in_theaters_recyclerview, FilmAdapter(inTheaters, this@HomeActivity))
+                setupHorizontalRecyclerView(view, R.id.in_theaters_recyclerview, FilmAdapter(response.body()?.results?.take(10) ?: emptyList(), listener))
                 loadTopRated(view)
             }
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { showToast("Failed to load In Theaters") }
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { /* Handle error */ }
         })
     }
 
     private fun loadTopRated(view: View) {
-        val clickListener: OnFilmClickListener = this
-
-        val movieCall = apiService.getTopRatedMovies(apiKey)
-        val tvCall = apiService.getTopRatedTvShows(apiKey)
-
-        movieCall.enqueue(object : Callback<MovieResponse> {
+        val listener: OnFilmClickListener = this
+        apiService.getTopRatedMovies(apiKey).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 val movieList = response.body()?.results ?: emptyList()
-                tvCall.enqueue(object : Callback<TvShowResponse> {
+                apiService.getTopRatedTvShows(apiKey).enqueue(object : Callback<TvShowResponse> {
                     override fun onResponse(call: Call<TvShowResponse>, response: Response<TvShowResponse>) {
                         val tvList = response.body()?.results ?: emptyList()
-
                         val movieItems = movieList.map { MediaItem(it.id, "movie", it.title, it.poster_path, it.release_date, it.voteAverage) }
                         val tvItems = tvList.map { MediaItem(it.id, "tv", it.name, it.poster_path, it.first_air_date, it.voteAverage) }
 
-                        val combined = (movieItems + tvItems)
-                            .sortedByDescending { it.voteAverage ?: 0.0 }
-                            .take(10)
-                            .map { CarouselItems(it.title ?: "Untitled", it.posterPath?.let { p -> "https://image.tmdb.org/t/p/w500$p" } ?: "", it.id, it.mediaType) }
+                        // ✅ This now passes the voteAverage into the CarouselItems
+                        val combined = (movieItems + tvItems).sortedByDescending { it.voteAverage ?: 0.0 }.take(10)
+                            .map { CarouselItems(it.title ?: "Untitled", it.posterPath?.let { p -> "https://image.tmdb.org/t/p/w500$p" } ?: "", it.id, it.mediaType, it.voteAverage) }
 
-                        setupHorizontalRecyclerView(view, R.id.top_rated_recyclerview, TopRatedAdapter(combined, clickListener))
+                        setupHorizontalRecyclerView(view, R.id.top_rated_recyclerview, TopRatedAdapter(combined, listener))
                         loadExploreSection(view)
                     }
-                    override fun onFailure(call: Call<TvShowResponse>, t: Throwable) { showToast("Failed to load Top Rated TV") }
+                    override fun onFailure(call: Call<TvShowResponse>, t: Throwable) { /* Handle error */ }
                 })
             }
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { showToast("Failed to load Top Rated Movies") }
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { /* Handle error */ }
         })
     }
 
@@ -227,40 +188,47 @@ class HomeActivity : Fragment(), OnFilmClickListener {
     }
 
     private fun loadStreamingNow(view: View) {
-        val clickListener: OnFilmClickListener = this
+        val listener: OnFilmClickListener = this
         apiService.getOnAirTvShows(apiKey).enqueue(object : Callback<TvShowResponse> {
             override fun onResponse(call: Call<TvShowResponse>, response: Response<TvShowResponse>) {
-                val nowStreaming = response.body()?.results?.take(10) ?: emptyList()
-                setupHorizontalRecyclerView(view, R.id.streaming_now_recyclerview, TvShowAdapter(nowStreaming, clickListener))
+                setupHorizontalRecyclerView(view, R.id.streaming_now_recyclerview, TvShowAdapter(response.body()?.results?.take(10) ?: emptyList(), listener))
+                loadTopBoxOffice(view)
+            }
+            override fun onFailure(call: Call<TvShowResponse>, t: Throwable) { loadTopBoxOffice(view) }
+        })
+    }
+
+    private fun loadTopBoxOffice(view: View) {
+        val listener: OnFilmClickListener = this
+        apiService.getTrendingMovies(apiKey).enqueue(object : Callback<MovieResponse> {
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                val boxOfficeMovies = response.body()?.results?.take(6)?.mapIndexed { index, movie ->
+                    // Add the 'earnings' parameter here
+                    BoxOfficeMovie(
+                        id = movie.id,
+                        rank = index + 1,
+                        title = movie.title ?: "Untitled",
+                        earnings = "$0M" // Or a real value if you have one from your API
+                    )
+                } ?: emptyList()
+                val recyclerView: RecyclerView = view.findViewById(R.id.top_box_office_recyclerview)
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.adapter = BoxOfficeAdapter(boxOfficeMovies, listener)
+                recyclerView.isNestedScrollingEnabled = false
                 loadComingSoon(view)
             }
-            override fun onFailure(call: Call<TvShowResponse>, t: Throwable) { showToast("Failed to load Streaming Now") }
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { loadComingSoon(view) }
         })
     }
 
     private fun loadComingSoon(view: View) {
-        val clickListener: OnFilmClickListener = this
+        val listener: OnFilmClickListener = this
         apiService.getComingSoon(apiKey).enqueue(object : Callback<MovieResponse> {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                val comingSoon = response.body()?.results?.take(10) ?: emptyList()
-                setupHorizontalRecyclerView(view, R.id.coming_soon_recyclerview, FilmAdapter(comingSoon, clickListener))
+                setupHorizontalRecyclerView(view, R.id.coming_soon_recyclerview, FilmAdapter(response.body()?.results?.take(10) ?: emptyList(), listener))
             }
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { showToast("Failed to load Coming Soon") }
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) { /* Handle error */ }
         })
-    }
-
-    private fun setupTopBoxOffice(view: View) {
-        val sampleMovies = listOf(
-            BoxOfficeMovie(1, "Tron: Ares", "$33.2M"),
-            BoxOfficeMovie(2, "Roofman", "$8.1M"),
-            BoxOfficeMovie(3, "One Battle After Another", "$6.8M"),
-            BoxOfficeMovie(4, "Gabby's Dollhouse: The Movie", "$3.5M"),
-            BoxOfficeMovie(5, "The Conjuring: Last Rites", "$3.1M"),
-            BoxOfficeMovie(6, "Soul on Fire", "$2.8M")
-        )
-        val recyclerView: RecyclerView = view.findViewById(R.id.top_box_office_recyclerview)
-        recyclerView.adapter = BoxOfficeAdapter(sampleMovies)
-        recyclerView.isNestedScrollingEnabled = false
     }
 
     private fun setupHorizontalRecyclerView(view: View, id: Int, adapter: RecyclerView.Adapter<*>) {
@@ -280,9 +248,7 @@ class HomeActivity : Fragment(), OnFilmClickListener {
             override fun onQueryTextChange(newText: String?) = false
         })
         val searchIcon = searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon)
-        searchIcon?.setOnClickListener {
-            performSearch(searchView.query.toString())
-        }
+        searchIcon?.setOnClickListener { performSearch(searchView.query.toString()) }
     }
 
     private fun performSearch(query: String?) {
@@ -320,4 +286,3 @@ class HomeActivity : Fragment(), OnFilmClickListener {
         if (::scrollRunnable.isInitialized) scrollHandler.postDelayed(scrollRunnable, 3500)
     }
 }
-

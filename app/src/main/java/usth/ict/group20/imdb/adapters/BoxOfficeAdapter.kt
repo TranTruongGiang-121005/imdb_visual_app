@@ -6,10 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import usth.ict.group20.imdb.R
+import usth.ict.group20.imdb.listeners.OnFilmClickListener
 import usth.ict.group20.imdb.models.BoxOfficeMovie
 
-class BoxOfficeAdapter(private val movies: List<BoxOfficeMovie>) :
-    RecyclerView.Adapter<BoxOfficeAdapter.MovieViewHolder>() {
+class BoxOfficeAdapter(
+    private val movies: List<BoxOfficeMovie>,
+    private val listener: OnFilmClickListener // Accepts the click listener from the fragment
+) : RecyclerView.Adapter<BoxOfficeAdapter.MovieViewHolder>() {
 
     class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val rank: TextView = itemView.findViewById(R.id.tv_rank)
@@ -27,7 +30,14 @@ class BoxOfficeAdapter(private val movies: List<BoxOfficeMovie>) :
         val movie = movies[position]
         holder.rank.text = movie.rank.toString()
         holder.title.text = movie.title
-        holder.earnings.text = movie.earnings
+        // Hide earnings for now as the API doesn't provide it easily
+        holder.earnings.visibility = View.GONE
+
+        // Set the click listener on the entire item
+        holder.itemView.setOnClickListener {
+            // When clicked, use the listener to tell HomeActivity which film was selected
+            listener.onFilmClick(movie.id, "movie")
+        }
     }
 
     override fun getItemCount() = movies.size
