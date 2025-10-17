@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="12dp"
@@ -17,19 +18,20 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:contentDescription="@string/film_poster" />
+            android:contentDescription="@string/film_poster"
+            tools:src="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/carousel_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#AA000000"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:padding="8dp"
-            android:text="Sample Title"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:background="#AA000000"
-            android:ellipsize="end"
-            android:maxLines="1" />
+            tools:text="Sample Title" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

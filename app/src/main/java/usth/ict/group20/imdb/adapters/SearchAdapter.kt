@@ -5,10 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import usth.ict.group20.imdb.R
 import usth.ict.group20.imdb.models.SearchResult
+import usth.ict.group20.imdb.ui.activity.FilmActivity
+
 
 class SearchAdapter(private var results: List<SearchResult>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -42,10 +45,29 @@ class SearchAdapter(private var results: List<SearchResult>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        // Get the data for the current item
         val element = results[position]
+
+        // Check the type of the ViewHolder and bind the data
         when (holder) {
-            is MovieTvViewHolder -> holder.bind(element)
-            is PersonViewHolder -> holder.bind(element)
+            is MovieTvViewHolder -> {
+                holder.bind(element)
+                holder.itemView.setOnClickListener {
+                    val intent = Intent(holder.itemView.context, FilmActivity::class.java).apply {
+                        putExtra("FILM_ID", element.id)
+                        putExtra("MEDIA_TYPE", element.mediaType)
+                    }
+                    holder.itemView.context.startActivity(intent)
+                }
+            }
+            is PersonViewHolder -> {
+                holder.bind(element)
+                // You can add a click listener for people here later
+                // For example, to open a PersonDetailActivity
+                holder.itemView.setOnClickListener {
+                    // TODO: Create and launch PersonDetailActivity
+                }
+            }
         }
     }
 

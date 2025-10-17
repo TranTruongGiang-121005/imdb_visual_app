@@ -28,7 +28,7 @@
             android:id="@+id/star_icon"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            app:srcCompat="@drawable/ic_star_rate"
+            app:srcCompat="@drawable/ic_star_filled"
             app:tint="@color/imdb_yellow"
             tools:ignore="ContentDescription" />
 

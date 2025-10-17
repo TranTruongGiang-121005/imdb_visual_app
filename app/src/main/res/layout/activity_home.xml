@@ -305,12 +305,13 @@
                 android:layout_width="4dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
-                android:background="#FFC107"
+                android:background="@drawable/stripe_yellow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
+                android:id="@+id/title_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -320,7 +321,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
+                    android:id="@+id/top_box_office_header"
                     style="@style/SubSectionHeaderTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Top box office (US)" />
 
                 <TextView
@@ -329,11 +333,10 @@
                     android:text="Weekend of 10 - 12 October"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="12sp" />
-
             </LinearLayout>
 
             <TextView
-                android:id="@+id/see_all_box_office"
+                android:id="@+id/see_all_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -355,8 +358,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_box_office_header_container"
-            tools:listitem="@layout/item_box_office_movie"
-            tools:itemCount="6"/>
+            tools:itemCount="6"
+            tools:listitem="@layout/item_box_office_movie" />
 
         <!-- Coming Soon -->
         <LinearLayout
@@ -394,8 +397,6 @@
             tools:listitem="@layout/item_film_poster" />
 
         <!-- More to Explore -->
-        <!-- === MORE TO EXPLORE SECTION === -->
-
         <!-- Main Section Header -->
         <TextView
             android:id="@+id/more_to_explore_header"
@@ -408,7 +409,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coming_soon_recyclerview" />
 
-        <!-- "follow IMDb on" Sub-Header with Stripe -->
+        <!-- "follow IMDb on" Sub-Header -->
         <LinearLayout
             android:id="@+id/follow_imdb_header_container"
             style="@style/SubSectionHeaderContainerStyle"

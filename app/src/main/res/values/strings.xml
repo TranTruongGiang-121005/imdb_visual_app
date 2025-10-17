@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">IMDb</string>
+    <string name="app_name">USTH IMDb</string>
     <string name="person_portrait">Celebrity portrait</string>
     <string name="film_poster_image_description">Film poster</string>
     <string name="news_article_image">News article image</string>
     <string name="film_poster">Film poster</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

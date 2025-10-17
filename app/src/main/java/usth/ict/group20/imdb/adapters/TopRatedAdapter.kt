@@ -8,14 +8,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import usth.ict.group20.imdb.R
+import usth.ict.group20.imdb.listeners.OnFilmClickListener
 import usth.ict.group20.imdb.models.CarouselItems
 
-class TopRatedAdapter(private val items: List<CarouselItems>) :
-    RecyclerView.Adapter<TopRatedAdapter.TopRatedViewHolder>() {
+class TopRatedAdapter(
+    private val items: List<CarouselItems>,
+    private val listener: OnFilmClickListener // ✅ Add listener
+) : RecyclerView.Adapter<TopRatedAdapter.TopRatedViewHolder>() {
 
-    inner class TopRatedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val poster: ImageView = view.findViewById(R.id.film_poster_image)
-        val title: TextView = view.findViewById(R.id.film_title_text)
+    class TopRatedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val poster: ImageView = itemView.findViewById(R.id.film_poster_image)
+        val title: TextView? = itemView.findViewById(R.id.film_title_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopRatedViewHolder {
@@ -26,9 +29,14 @@ class TopRatedAdapter(private val items: List<CarouselItems>) :
 
     override fun onBindViewHolder(holder: TopRatedViewHolder, position: Int) {
         val item = items[position]
-        holder.title.text = item.name
         holder.poster.load(item.imageUrl)
+        holder.title?.text = item.name
+
+        // ✅ Set the click listener
+        holder.itemView.setOnClickListener {
+            listener.onFilmClick(item.filmId, item.mediaType)
+        }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount() = items.size
 }

@@ -69,4 +69,18 @@ interface IMDbApiService {
         @Query("api_key") apiKey: String,
         @Query("query") query: String
     ): Call<MultiSearchResponse>
+
+    @GET("movie/{movie_id}")
+    fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("append_to_response") appendToResponse: String = "images" // Fetch images
+    ): Call<MovieDetail>
+
+    @GET("tv/{tv_id}")
+    fun getTvShowDetails(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("append_to_response") appendToResponse: String = "images,content_ratings" // Fetch images
+    ): Call<TvShowDetail>
 }

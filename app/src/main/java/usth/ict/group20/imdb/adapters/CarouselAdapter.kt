@@ -8,10 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import usth.ict.group20.imdb.R
+import usth.ict.group20.imdb.listeners.OnFilmClickListener
 import usth.ict.group20.imdb.models.CarouselItems
 
-class CarouselAdapter(private val items: List<CarouselItems>) :
-    RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>() {
+class CarouselAdapter(
+    private val items: List<CarouselItems>,
+    private val listener: OnFilmClickListener
+) : RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>() {
 
     class CarouselViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.carousel_image)
@@ -28,6 +31,11 @@ class CarouselAdapter(private val items: List<CarouselItems>) :
         val item = items[position]
         holder.image.load(item.imageUrl)
         holder.title.text = item.name
+
+        holder.itemView.setOnClickListener {
+
+            listener.onFilmClick(item.filmId, item.mediaType)
+        }
     }
 
     override fun getItemCount() = items.size

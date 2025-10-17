@@ -8,14 +8,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import usth.ict.group20.imdb.R
+import usth.ict.group20.imdb.listeners.OnFilmClickListener
 import usth.ict.group20.imdb.models.Movie
 
-class FilmAdapter(private val movies: List<Movie>) :
-    RecyclerView.Adapter<FilmAdapter.FilmViewHolder>() {
+// ✅ 1. Add the listener to the constructor
+class FilmAdapter(
+    private val films: List<Movie>,
+    private val listener: OnFilmClickListener
+) : RecyclerView.Adapter<FilmAdapter.FilmViewHolder>() {
 
     class FilmViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val poster: ImageView = itemView.findViewById(R.id.film_poster_image)
-        val title: TextView = itemView.findViewById(R.id.film_title_text)
+        val title: TextView? = itemView.findViewById(R.id.film_title_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
@@ -25,10 +29,15 @@ class FilmAdapter(private val movies: List<Movie>) :
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
-        val movie = movies[position]
-        holder.poster.load(movie.posterUrl)
-        holder.title.text = movie.title
+        val film = films[position]
+        holder.poster.load("https://image.tmdb.org/t/p/w500${film.poster_path}")
+        holder.title?.text = film.title
+
+        // ✅ 2. Set the click listener on the item
+        holder.itemView.setOnClickListener {
+            listener.onFilmClick(film.id, "movie") // All films here are movies
+        }
     }
 
-    override fun getItemCount() = movies.size
+    override fun getItemCount() = films.size
 }

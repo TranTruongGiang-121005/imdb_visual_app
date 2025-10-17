@@ -30,6 +30,12 @@
             android:label="Search Results"
             android:parentActivityName=".ui.activity.MainActivity" />
 
+        <activity
+            android:name=".ui.activity.FilmActivity"
+            android:exported="false"
+            android:label="Film Details"
+            android:parentActivityName=".ui.activity.MainActivity" />
+
     </application>
 
 </manifest>
