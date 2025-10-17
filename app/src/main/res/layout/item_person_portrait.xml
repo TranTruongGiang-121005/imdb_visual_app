@@ -11,7 +11,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/person_portrait_image"
         android:layout_width="110dp"
-        android:layout_height="150dp"
+        android:layout_height="160dp"
         android:scaleType="centerCrop"
         android:padding="2dp"
         app:strokeColor="@color/material_grey_600"
@@ -34,13 +34,5 @@
         android:gravity="center"
         tools:text="Morgan Freeman" />
 
-    <!-- person Age -->
-    <TextView
-        android:id="@+id/person_age_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="12sp"
-        tools:text="88 years" />
 
 </LinearLayout>

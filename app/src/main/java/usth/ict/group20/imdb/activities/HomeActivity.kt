@@ -23,7 +23,9 @@ import usth.ict.group20.imdb.R
 import usth.ict.group20.imdb.adapters.*
 import usth.ict.group20.imdb.models.*
 import usth.ict.group20.imdb.network.*
-class HomeFragment : Fragment() {
+import usth.ict.group20.imdb.ui.activity.SearchResultsActivity
+
+class HomeActivity : Fragment() {
 
     private lateinit var viewPager: ViewPager2
     private val scrollHandler = Handler(Looper.getMainLooper())
@@ -44,7 +46,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_home, container, false)
+    ): View? = inflater.inflate(R.layout.activity_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -354,10 +356,20 @@ class HomeFragment : Fragment() {
         val searchView: SearchView = view.findViewById(R.id.home_search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) showToast("Searching for: $query")
+                if (!query.isNullOrBlank()) {
+                    // Launch the new SearchResultsActivity
+                    val intent = Intent(requireActivity(), SearchResultsActivity::class.java)
+                    intent.putExtra("SEARCH_QUERY", query)
+                    startActivity(intent)
+                    searchView.clearFocus() // To hide the keyboard
+                }
                 return true
             }
-            override fun onQueryTextChange(newText: String?) = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // We don't want to search on every key press, so we do nothing here.
+                return false
+            }
         })
     }
 

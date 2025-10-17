@@ -58,10 +58,15 @@ interface IMDbApiService {
         @Query("page") page: Int = 1
     ): Call<TvShowResponse>
 
-
     @GET("person/popular")
     fun getPopularCelebrities(
         @Query("api_key") apiKey: String,
         @Query("page") page: Int = 1
     ): Call<PersonResponse>
+
+    @GET("search/multi")
+    fun searchMulti(
+        @Query("api_key") apiKey: String,
+        @Query("query") query: String
+    ): Call<MultiSearchResponse>
 }
